@@ -8,11 +8,11 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface LocationDao {
-    @Query("Select * FROM Location")
-    List<Location> getAll();
+public interface UserLocationDao {
+    @Query("Select * FROM UserLocation")
+    List<UserLocation> getAll();
     @Insert
-    void insertLocation(Location locations);
+    void insertLocation(UserLocation locations);
     @Delete
-    void deleteLocation(Location locations);
+    void deleteLocation(UserLocation locations);
 }

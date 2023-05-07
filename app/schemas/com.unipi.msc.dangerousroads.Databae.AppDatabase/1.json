@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6ce8da4a4e25aee42f1d90b863a7acfd",
+    "identityHash": "2fafd0e13433fd4b9ca7f6c322459c96",
     "entities": [
       {
-        "tableName": "Location",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER, `location` REAL NOT NULL, `speed` REAL NOT NULL)",
+        "tableName": "UserLocation",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dateFrom` INTEGER, `dateTo` INTEGER, `locationFromX` REAL NOT NULL, `locationFromY` REAL NOT NULL, `locationToX` REAL NOT NULL, `locationToY` REAL NOT NULL, `speedFrom` REAL NOT NULL, `speedTo` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,20 +15,50 @@
             "notNull": false
           },
           {
-            "fieldPath": "date",
-            "columnName": "date",
+            "fieldPath": "dateFrom",
+            "columnName": "dateFrom",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "location",
-            "columnName": "location",
+            "fieldPath": "dateTo",
+            "columnName": "dateTo",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "locationFromX",
+            "columnName": "locationFromX",
             "affinity": "REAL",
             "notNull": true
           },
           {
-            "fieldPath": "speed",
-            "columnName": "speed",
+            "fieldPath": "locationFromY",
+            "columnName": "locationFromY",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "locationToX",
+            "columnName": "locationToX",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "locationToY",
+            "columnName": "locationToY",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "speedFrom",
+            "columnName": "speedFrom",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "speedTo",
+            "columnName": "speedTo",
             "affinity": "REAL",
             "notNull": true
           }
@@ -46,7 +76,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6ce8da4a4e25aee42f1d90b863a7acfd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2fafd0e13433fd4b9ca7f6c322459c96')"
     ]
   }
 }
