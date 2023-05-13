@@ -105,9 +105,7 @@ public class UserLocation {
         this.speedFrom = speedFrom;
     }
 
-    public float getSpeedTo() {
-        return speedTo;
-    }
+    public float getSpeedTo(){ return speedTo; }
 
     public void setSpeedTo(float speedTo) {
         this.speedTo = speedTo;
@@ -118,6 +116,7 @@ public class UserLocation {
         dateFrom = builder.dateFrom;
         dateTo = builder.dateTo;
         speedFrom = builder.speedFrom;
+        speedTo = builder.speedTo;
         if (builder.locationFrom != null){
             locationFromX = builder.locationFrom.latitude;
             locationFromY = builder.locationFrom.longitude;

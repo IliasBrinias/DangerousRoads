@@ -9,15 +9,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.unipi.msc.dangerousroads.Databae.UserLocation;
 import com.unipi.msc.dangerousroads.Databae.UserLocationService;
+import com.unipi.msc.dangerousroads.Model.ItemViewModel;
 
 import java.util.Date;
 
@@ -26,17 +29,27 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     UserLocationService userLocationService;
     LocationManager locationManager;
     Button buttonMeasure;
+    ImageButton imageButtonRefresh;
     UserLocation userLocation;
+    private ItemViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         buttonMeasure = findViewById(R.id.buttonMeasure);
+        imageButtonRefresh = findViewById(R.id.buttonRefresh);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         userLocationService = new UserLocationService(this);
         buttonMeasure.setOnClickListener(this::measuring);
+        imageButtonRefresh.setOnClickListener(this::refresh);
         userLocation = null;
+        viewModel = new ViewModelProvider(this).get(ItemViewModel.class);
     }
+
+    private void refresh(View view) {
+        viewModel.setRefresh();
+    }
+
     private void measuring(View v){
         if (buttonMeasure.getText().equals(getString(R.string.start_measuring))){
             startMeasuring();
@@ -47,9 +60,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private void stopMeasuring() {
         buttonMeasure.setText(getString(R.string.start_measuring));
         locationManager.removeUpdates(this);
+        viewModel.setStatusLocation(false);
     }
 
     private void startMeasuring() {
+        viewModel.setStatusLocation(true);
         buttonMeasure.setText(getString(R.string.stop_measuring));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -62,11 +77,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 0, 0, this);
     }
+
     @Override
     public void onLocationChanged(@NonNull Location location) {
-//        TODO: send data to fragment activity for
-//         1) current location
-//         2) new db data
         if (userLocation == null){
             userLocation = new UserLocation.UserLocationBuilder()
                     .speedFrom(location.getSpeed())
@@ -82,12 +95,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 userLocation = new UserLocation.UserLocationBuilder()
                         .speedFrom(userLocation.getSpeedFrom())
                         .locationFrom(userLocation.getLocationTo())
-                        .dateFrom(userLocation.getDateFrom())
+                        .dateFrom(userLocation.getDateTo())
                         .speedTo(location.getSpeed())
                         .locationTo(new LatLng(location.getLatitude(), location.getLongitude()))
                         .dateTo(new Date().getTime())
                         .build();
             }
+            viewModel.selectLocation(userLocation);
             userLocationService.addLocation(userLocation);
         }
     }
@@ -98,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         if (requestCode == REQ_LOCATION_CODE) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             }
         }
