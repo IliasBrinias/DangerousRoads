@@ -20,7 +20,7 @@ public class UserLocationService {
     }
     public void addLocation(UserLocation userLocation){
         new Thread(() -> {
-            AppDatabase db = Room.databaseBuilder(c, AppDatabase.class, Constants.DB_NAME).build();
+            AppDatabase db = Room.databaseBuilder(c, AppDatabase.class, Constants.DB_NAME). build();
             db.locationDao().insertLocation(userLocation);
         }).start();
     }

@@ -102,11 +102,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         });
     }
     private boolean check_deceleration(UserLocation userLocation){
-        long timeDiff = (userLocation.getDateTo()/1000) - (userLocation.getDateFrom()/1000);
-        float speedDiff = userLocation.getSpeedTo() - userLocation.getSpeedFrom();
-        float acc = speedDiff/timeDiff;
-        Log.e("acc", String.valueOf(acc));
-        return -acc > MAX_DECELERATION;
+        double timeDiff = (userLocation.getDateTo() - userLocation.getDateFrom())/1000.;
+        double speedDiff = userLocation.getSpeedTo() - userLocation.getSpeedFrom();
+        double acc = speedDiff/timeDiff;
+        return acc < MAX_DECELERATION;
     }
     private void show_circle(UserLocation userLocation){
         CircleOptions circleOptions = new CircleOptions()
